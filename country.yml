@@ -1,0 +1,9 @@
+summary: "Revenues and Transactions by Country"
+description: "This API request returns a dataframe containing the Revenues and Transactions by country"
+consumes:
+- "application/json"
+produces:
+- "application/json"
+responses:
+  200:
+    description: "Successful connection"

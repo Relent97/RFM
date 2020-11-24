@@ -1,0 +1,9 @@
+summary: "Customer Acquisition by Date"
+description: "This API request returns a dataframe containing the day to day Customer Acquisition figures"
+consumes:
+- "application/json"
+produces:
+- "application/json"
+responses:
+  200:
+    description: "Successful connection"

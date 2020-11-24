@@ -1,0 +1,9 @@
+summary: "Customer's segmented using the RFM Model."
+description: "This API request returns a dataframe containing the RFM customer segmentation"
+consumes:
+- "application/json"
+produces:
+- "application/json"
+responses:
+  200:
+    description: "Successful connection"

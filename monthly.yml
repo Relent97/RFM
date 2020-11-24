@@ -1,0 +1,9 @@
+summary: "Monthly Transactions and Revenue"
+description: "This API request returns a dataframe containing the Monthly figures"
+consumes:
+- "application/json"
+produces:
+- "application/json"
+responses:
+  200:
+    description: "Successful connection"
