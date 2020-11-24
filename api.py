@@ -27,13 +27,13 @@ swagger = Swagger(app, config=swagger_config)
 
 
 
-
+#Importing the file and cleaning the data
 D = pd.read_csv('data.csv',encoding= 'unicode_escape')
 D['Revenue'] = D['UnitPrice'] * D['Quantity']
 D['InvoiceDate'] = pd.to_datetime(D['InvoiceDate'])
 D.Description.fillna('None', inplace = True)
 D.dropna(inplace=True)
-
+# Converting to Datetime values
 D['Date'] = D['InvoiceDate'].dt.date
 D['Week'] = D['InvoiceDate'].dt.week
 D['Month'] = D['InvoiceDate'].dt.month
@@ -50,19 +50,21 @@ This_month = D["Month"].max()
 Last_month = This_month-1
 
 
-
+#Create a dataframe with the customers and their first transaction date
 C = D.groupby('CustomerID').min()['Date'].to_frame().reset_index()
 C['Date'] = pd.to_datetime(C['Date'])
 C['Month'] = C['Date'].dt.month
 
+# Create DataFrame showing transactions by country
 Cn = D.groupby("Date")["Country"].value_counts().to_frame()
 Cn.columns = ["R"]
 Cn.reset_index(inplace = True)
 Cn.columns = ["Date","Country","Count"]
 
-
+#Revenue per country
 Css = D.groupby(['Date','Country']).sum()['Revenue'].to_frame().reset_index()
 
+# First transaction per country
 Dt = []
 Cou = []
 for x in D.Country.unique():
@@ -86,7 +88,7 @@ print(snapshot_date)
 
 
               
-
+# Create Dataframe for first transaction per customer i.e customer acquisition
 RD = []
 Cust = []
 for x in D.CustomerID.unique():
@@ -102,14 +104,14 @@ Customers['Dayn'] = Customers.Date.dt.dayofweek
 Customers['Day'] = Customers.Dayn.map(Dayname)
 
 
-
+#1st Endpoint
 class Data1(Resource):
 	def get(self):
 		D1 = D.to_json()
 		return D1
 
 
-
+# Endpoint to get monthly revenue
 class Monthly(Resource):
 	@swag_from("monthly.yml")
 	def get(self):
@@ -119,7 +121,7 @@ class Monthly(Resource):
 		M1['Revenue Per Transaction'] = M1['Revenue']/M1['Transactions']
 		M = M1.to_json()
 		return M
-
+# Endpoint to get weekly revenue
 class Weekly(Resource):
 	@swag_from("weekly.yml")
 	def get (self):
@@ -129,7 +131,7 @@ class Weekly(Resource):
 		W1['Revenue Per Transaction'] = W1['Revenue']/W1['Transactions']
 		W = W1.to_json()
 		return W
-
+# Endpoint for customer segmentation based on RFM
 class rfm1(Resource):
 	@swag_from("rfm.yml")
 	def get(self):
@@ -164,7 +166,7 @@ class rfm1(Resource):
 		Ra['Level'] = Ra.apply(rfm_level, axis=1)
 		Ras = Ra.to_json()
 		return Ras
-
+#Endpoint to get Transactions per country
 class Country(Resource):
 	@swag_from("country.yml")
 	def get(self):
@@ -173,14 +175,14 @@ class Country(Resource):
 		CRT.reset_index(inplace=True)
 		CR = CRT.to_json()
 		return CR           
-
+#End point for customer transactions per day
 class CSD2(Resource):
 	@swag_from("csd2.yaml")
 	def get(self):
 		CSD22 = Customers.groupby('Day')['CustomerID'].count().to_frame().reset_index()
 		CSD = CSD22.to_json()
 		return CSD
-
+# Endpoint for customer transaction per day
 class CSDT(Resource):
 	@swag_from("csdt.yml")
 	def get(self):
@@ -189,14 +191,14 @@ class CSDT(Resource):
 		return CST
 
 
-
+#Url ROutes
 @app.route('/')
 def hello():
 	return("Hello World")
 
 
 
-
+# API endpoints
 
 api.add_resource(Data1, '/data')
 api.add_resource(Monthly, '/monthly')
