@@ -5,3 +5,7 @@ R = Recency (When last a purxhase was made, i.e how soon was it)
 F = Frequency (How often they make purchases)
 M = Monetary Value (How much was spent)
 The Model was applied on the Kaggle E-commerce Dataset.
+
+API was built using this data and deployed temporarily on Heroku. 
+api.py - Python file containing api.
+
